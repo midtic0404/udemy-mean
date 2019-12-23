@@ -40,16 +40,27 @@ app.post('/api/posts', (req,res,next) => {
   })
 })
 
-app.use('/api/posts', (req,res,next) => {
-  const posts = [
-    {id: 'asdf234', title: 'first post', content: 'from the server'},
-    {id: 'asasdf5', title: 'second post lala', content: 'new post here yaya'}
-  ]
+app.get('/api/posts', (req,res,next) => {
+  Post.find().then(
+    (documents) => {
+      res.status(200).json({
+        message: 'Post fetched successfully',
+        posts: documents
+      });
+    }
+  )
+});
 
-  res.status(200).json({
-    message: 'Post fetched successfully',
-    posts: posts
-  });
+app.delete('/api/posts/:id', (req, res, next) => {
+  Post.deleteOne({
+    _id: req.params.id
+  }).then((result) => {
+    console.log(result);
+    res.status(200).json({
+      message: 'Post deleted'
+    })
+  })
+
 });
 
 module.exports = app;
